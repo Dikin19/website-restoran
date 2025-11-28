@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.models.admin_model import Admin
+from app.models.admin import Admin
 from app.utils.helpers import validate_required_fields
 
 class AuthController:
