@@ -185,3 +185,90 @@ class MenuController:
                 'message': f'Error: {str(e)}',
                 'data': None
             }), 500
+
+    @staticmethod
+    def delete_menu(menu_id):
+        try:
+            # Cek apakah menu ada
+            menu = Menu.get_by_id(menu_id)
+            if not menu:
+                return jsonify({
+                    'success': False,
+                    'message': 'Menu tidak ditemukan',
+                    'data': None
+                }), 404
+            
+            # Hapus gambar jika ada
+            if menu['gambar']:
+                delete_image(menu['gambar'], current_app.config['UPLOAD_FOLDER'])
+            
+            # Hapus dari database
+            Menu.delete(menu_id)
+            
+            return jsonify({
+                'success': True,
+                'message': 'Menu berhasil dihapus',
+                'data': None
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
+
+    @staticmethod
+    def toggle_tersedia(menu_id):
+        
+        try:
+            
+            menu = Menu.get_by_id(menu_id)
+            if not menu:
+                return jsonify({
+                    'success': False,
+                    'message': 'Menu tidak ditemukan',
+                    'data': None
+                }), 404
+            
+            
+            Menu.toggle_tersedia(menu_id)
+            
+            
+            new_status = not menu.get('tersedia', True)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Menu berhasil diubah menjadi {"tersedia" if new_status else "tidak tersedia"}',
+                'data': {
+                    'id': menu_id,
+                    'tersedia': new_status
+                }
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
+    
+    @staticmethod
+    def get_menu_by_kategori(kategori):
+        """Get menu berdasarkan kategori yang tersedia"""
+        try:
+            menus = Menu.get_by_kategori(kategori)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Data menu kategori {kategori} berhasil diambil',
+                'data': menus or [],
+                'total': len(menus) if menus else 0
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500

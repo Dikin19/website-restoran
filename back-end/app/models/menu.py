@@ -85,3 +85,17 @@ class Menu:
         )
         return execute_query(query, params)
     
+    @staticmethod
+    def delete(menu_id):
+        query = "DELETE FROM menus WHERE id = %s"
+        return execute_query(query, (menu_id,))
+
+    @staticmethod
+    def toggle_tersedia(menu_id):
+        query = "UPDATE menus SET tersedia = NOT tersedia WHERE id = %s"
+        return execute_query(query, (menu_id,))
+    
+    @staticmethod
+    def get_by_kategori(kategori):
+        query = "SELECT * FROM menus WHERE kategori = %s AND tersedia = TRUE ORDER BY nama"
+        return execute_query(query, (kategori,), fetch_all=True)

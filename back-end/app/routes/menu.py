@@ -42,3 +42,15 @@ def update_menu(menu_id):
     
     return MenuController.update_menu(menu_id, data, file)
 
+@bp.route('/<int:menu_id>', methods=['DELETE'])
+def delete_menu(menu_id):
+    
+    return MenuController.delete_menu(menu_id)
+
+@bp.route('/<int:menu_id>/toggle', methods=['PATCH'])
+def toggle_tersedia(menu_id):
+    return MenuController.toggle_tersedia(menu_id)
+
+@bp.route('/kategori/<string:kategori>', methods=['GET'])
+def get_by_kategori(kategori):
+    return MenuController.get_menu_by_kategori(kategori)
