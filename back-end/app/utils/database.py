@@ -14,8 +14,8 @@ def get_db():
         print("❌ Gagal koneksi:", err)
         return None
 
-def execute_query(query, params=None, fetch_one=False, fetch_all=False):
-    """Execute query dan return hasil"""
+def execute_query(query, params=None, fetch_one=False, fetch_all=False, commit=False):
+    
     db = get_db()
     if not db:
         return None
@@ -45,5 +45,5 @@ def execute_query(query, params=None, fetch_one=False, fetch_all=False):
         return None
 
 def get_db_connection():
-    """Alias untuk get_db()"""
+    
     return get_db()

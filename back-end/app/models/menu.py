@@ -52,3 +52,18 @@ class Menu:
     def get_by_id(menu_id):
         query = "SELECT * FROM menus WHERE id = %s"
         return execute_query(query, (menu_id,), fetch_one=True)
+
+    @staticmethod
+    def create(data):
+        query = """
+            INSERT INTO menus (nama, deskripsi, harga, kategori, gambar) 
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        params = (
+            data['nama'],
+            data.get('deskripsi', ''),
+            data['harga'],
+            data['kategori'],
+            data.get('gambar', None)
+        )
+        return execute_query(query, params)

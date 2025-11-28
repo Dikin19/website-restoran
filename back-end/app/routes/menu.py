@@ -16,5 +16,16 @@ def get_all_menus():
 
 @bp.route('/<int:menu_id>', methods=['GET'])
 def get_menu_by_id(menu_id):
-    
     return MenuController.get_menu_by_id(menu_id)
+
+    
+@bp.route('', methods=['POST'])
+def create_menu():
+    data = {
+        'nama': request.form.get('nama'),
+        'deskripsi': request.form.get('deskripsi', ''),
+        'harga': request.form.get('harga'),
+        'kategori': request.form.get('kategori')
+    }
+    file = request.files.get('gambar')
+    return MenuController.create_menu(data, file)

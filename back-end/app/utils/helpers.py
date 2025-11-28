@@ -30,12 +30,17 @@ def save_image(file, upload_folder='uploads'):
     if not file:
         return None
     
+    # Validasi ekstensi file
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    filename = secure_filename(file.filename)
+    if '.' not in filename or filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+        return None
+    
     # Buat folder jika belum ada
     if not os.path.exists(upload_folder):
         os.makedirs(upload_folder)
     
     # Generate unique filename
-    filename = secure_filename(file.filename)
     unique_filename = f"{uuid.uuid4().hex}_{filename}"
     filepath = os.path.join(upload_folder, unique_filename)
     
