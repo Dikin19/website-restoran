@@ -67,3 +67,21 @@ class Menu:
             data.get('gambar', None)
         )
         return execute_query(query, params)
+
+    @staticmethod
+    def update(menu_id, data):
+        query = """
+            UPDATE menus 
+            SET nama = %s, deskripsi = %s, harga = %s, kategori = %s, gambar = %s
+            WHERE id = %s
+        """
+        params = (
+            data['nama'],
+            data.get('deskripsi', ''),
+            data['harga'],
+            data['kategori'],
+            data.get('gambar'),
+            menu_id
+        )
+        return execute_query(query, params)
+    

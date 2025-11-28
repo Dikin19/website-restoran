@@ -111,3 +111,77 @@ class MenuController:
                 'message': f'Error: {str(e)}',
                 'data': None
             }), 500
+
+    @staticmethod
+    def update_menu(menu_id, data, file=None):
+        
+        try:
+            
+            existing_menu = Menu.get_by_id(menu_id)
+            if not existing_menu:
+                return jsonify({
+                    'success': False,
+                    'message': 'Menu tidak ditemukan',
+                    'data': None
+                }), 404
+            
+            
+            required = ['nama', 'harga', 'kategori']
+            is_valid, missing = validate_required_fields(data, required)
+            
+            if not is_valid:
+                return jsonify({
+                    'success': False,
+                    'message': f'Field wajib kosong: {", ".join(missing)}',
+                    'data': None
+                }), 400
+            
+            
+            try:
+                harga = float(data['harga'])
+                if harga <= 0:
+                    raise ValueError()
+            except ValueError:
+                return jsonify({
+                    'success': False,
+                    'message': 'Harga harus angka positif',
+                    'data': None
+                }), 400
+            
+            
+            old_image = existing_menu['gambar']
+            new_filename = old_image
+            
+            if file:
+                
+                new_filename = save_image(file, current_app.config['UPLOAD_FOLDER'])
+                if new_filename:
+                    # Hapus gambar lama
+                    if old_image:
+                        delete_image(old_image, current_app.config['UPLOAD_FOLDER'])
+                else:
+                    return jsonify({
+                        'success': False,
+                        'message': 'Gagal upload gambar baru',
+                        'data': None
+                    }), 400
+            
+            # Update ke database
+            data['gambar'] = new_filename
+            Menu.update(menu_id, data)
+            
+            return jsonify({
+                'success': True,
+                'message': 'Menu berhasil diupdate',
+                'data': {
+                    'id': menu_id,
+                    'gambar': new_filename
+                }
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
