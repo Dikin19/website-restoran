@@ -22,11 +22,11 @@ def create_admin():
     
     # Validasi input
     if not username or not password or not nama_lengkap:
-        print("❌ Semua field harus diisi!")
+        print("Semua field harus diisi!")
         return
     
     if len(password) < 6:
-        print("❌ Password minimal 6 karakter!")
+        print("Password minimal 6 karakter!"`)
         return
     
     hashed_password = hash_password(password)
