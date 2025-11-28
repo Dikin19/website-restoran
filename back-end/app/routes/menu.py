@@ -12,3 +12,9 @@ def get_all_menus():
     search = request.args.get('search', None)
     
     return MenuController.get_all_menus(page, limit, kategori, search)
+
+
+@bp.route('/<int:menu_id>', methods=['GET'])
+def get_menu_by_id(menu_id):
+    
+    return MenuController.get_menu_by_id(menu_id)

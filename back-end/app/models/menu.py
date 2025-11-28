@@ -48,4 +48,7 @@ class Menu:
             }
         }
     
-   
+    @staticmethod
+    def get_by_id(menu_id):
+        query = "SELECT * FROM menus WHERE id = %s"
+        return execute_query(query, (menu_id,), fetch_one=True)

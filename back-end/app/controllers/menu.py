@@ -24,3 +24,28 @@ class MenuController:
                 'data': None
             }), 500
     
+    @staticmethod
+    def get_menu_by_id(menu_id):
+        
+        try:
+            menu = Menu.get_by_id(menu_id)
+            
+            if not menu:
+                return jsonify({
+                    'success': False,
+                    'message': 'Menu tidak ditemukan',
+                    'data': None
+                }), 404
+            
+            return jsonify({
+                'success': True,
+                'message': 'Detail menu berhasil diambil',
+                'data': menu
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
