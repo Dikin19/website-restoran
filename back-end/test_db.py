@@ -12,12 +12,12 @@ def test_db():
             password=os.getenv("DB_PASSWORD"),
             database=os.getenv("DB_NAME")
         )
-        print("Database CONNECTED")
+        print("database CONNECTED")
         conn.close()
 
     except Exception as e:
-        print("Database FAILED!")
-        print("Error:", e)
+        print("database FAILED!")
+        print("error:", e)
 
 if __name__ == "__main__":
     test_db()
