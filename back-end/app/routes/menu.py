@@ -19,6 +19,7 @@ def get_menu_by_id(menu_id):
   
 @bp.route('', methods=['POST'])
 def create_menu():
+    """Create new menu with multipart/form-data support"""
     data = {
         'nama': request.form.get('nama'),
         'deskripsi': request.form.get('deskripsi', ''),
@@ -28,15 +29,21 @@ def create_menu():
     file = request.files.get('gambar')
     return MenuController.create_menu(data, file)
 
-@bp.route('/<int:menu_id>', methods=['PUT'])
+@bp.route('/update/<int:menu_id>', methods=['POST'])
 def update_menu(menu_id):
-    
+    """Update menu via POST with FormData support"""
+    # Parse form data
     data = {
         'nama': request.form.get('nama'),
         'deskripsi': request.form.get('deskripsi', ''),
         'harga': request.form.get('harga'),
         'kategori': request.form.get('kategori')
     }
+    
+    # Debug logging
+    print(f"Update Menu {menu_id}")
+    print(f"Form data: {dict(request.form)}")
+    print(f"Files: {list(request.files.keys())}")
     
     file = request.files.get('gambar')
     

@@ -54,6 +54,9 @@ class MenuController:
     def create_menu(data, file=None):
         
         try:
+            # Log untuk debugging
+            current_app.logger.info(f'Creating menu with data: {data}')
+            current_app.logger.info(f'File received: {file.filename if file else "No file"}')
             
             required = ['nama', 'harga', 'kategori']
             is_valid, missing = validate_required_fields(data, required)
@@ -116,6 +119,9 @@ class MenuController:
     def update_menu(menu_id, data, file=None):
         
         try:
+            # Log untuk debugging
+            current_app.logger.info(f'Updating menu ID: {menu_id} with data: {data}')
+            current_app.logger.info(f'File received: {file.filename if file else "No file"}')
             
             existing_menu = Menu.get_by_id(menu_id)
             if not existing_menu:
