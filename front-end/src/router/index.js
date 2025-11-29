@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import MenuListView from '../views/MenuListView.vue'
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashboardView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/menu',
+    name: 'MenuList',
+    component: MenuListView,
     meta: { requiresAuth: true }
   },
 ]
