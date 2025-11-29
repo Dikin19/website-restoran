@@ -1,8 +1,13 @@
 <script>
 import authService from "@/services/authService";
+import Notification from "@/components/Notification.vue";
 
 export default {
   name: "LoginView",
+
+  components: {
+    Notification,
+  },
 
   data() {
     return {
@@ -11,14 +16,56 @@ export default {
         password: "",
       },
       loading: false,
-      errorMessage: "",
+      errors: {
+        username: "",
+        password: "",
+      },
+      notification: {
+        show: false,
+        type: "info",
+        message: "",
+      },
     };
   },
 
   methods: {
+    validateForm() {
+      this.errors = {
+        username: "",
+        password: "",
+      };
+
+      let isValid = true;
+
+      if (!this.form.username || this.form.username.trim() === "") {
+        this.errors.username = "Username wajib diisi";
+        isValid = false;
+      } else if (this.form.username.length < 3) {
+        this.errors.username = "Username minimal 3 karakter";
+        isValid = false;
+      }
+
+      if (!this.form.password || this.form.password.trim() === "") {
+        this.errors.password = "Password wajib diisi";
+        isValid = false;
+      } else if (this.form.password.length < 6) {
+        this.errors.password = "Password minimal 6 karakter";
+        isValid = false;
+      }
+
+      if (!isValid) {
+        this.showNotification("error", "Mohon lengkapi form dengan benar");
+      }
+
+      return isValid;
+    },
+
     async handleLogin() {
+      if (!this.validateForm()) {
+        return;
+      }
+
       this.loading = true;
-      this.errorMessage = "";
 
       try {
         const response = await authService.login(this.form);
@@ -29,17 +76,30 @@ export default {
           localStorage.setItem("adminId", admin.id);
           localStorage.setItem("adminName", admin.nama_lengkap);
 
-          this.$router.push({ name: "Dashboard" });
+          this.showNotification(
+            "success",
+            `Selamat datang, ${admin.nama_lengkap}!`
+          );
+
+          setTimeout(() => {
+            this.$router.push({ name: "Dashboard" });
+          }, 1000);
         }
       } catch (error) {
+        let errorMsg = "Terjadi kesalahan. Silakan coba lagi.";
+
         if (error.response && error.response.data) {
-          this.errorMessage = error.response.data.message;
-        } else {
-          this.errorMessage = "Terjadi kesalahan. Silakan coba lagi.";
+          errorMsg = error.response.data.message || errorMsg;
         }
+
+        this.showNotification("error", errorMsg);
       } finally {
         this.loading = false;
       }
+    },
+
+    showNotification(type, message) {
+      this.notification = { show: true, type, message };
     },
   },
 };
@@ -55,44 +115,48 @@ export default {
         <p class="subtitle">Login untuk mengelola restoran</p>
       </div>
 
-      
       <form @submit.prevent="handleLogin" class="login-form">
-      
         <div class="form-group">
           <label class="form-label">Username</label>
           <input
             v-model="form.username"
             type="text"
-            class="form-input"
+            :class="['form-input', { 'input-error': errors.username }]"
             placeholder="Masukkan username"
-            required
+            @input="errors.username = ''"
           />
+          <span v-if="errors.username" class="error-text">
+            {{ errors.username }}
+          </span>
         </div>
 
-      
         <div class="form-group">
           <label class="form-label">Password</label>
           <input
             v-model="form.password"
             type="password"
-            class="form-input"
+            :class="['form-input', { 'input-error': errors.password }]"
             placeholder="Masukkan password"
-            required
+            @input="errors.password = ''"
           />
+          <span v-if="errors.password" class="error-text">
+            {{ errors.password }}
+          </span>
         </div>
 
-       
-        <div v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-
-       
         <button type="submit" class="btn-login" :disabled="loading">
-          <span v-if="loading">Loading...</span>
-          <span v-else>Login</span>
+          <span v-if="loading">⏳ Loading...</span>
+          <span v-else>🔐 Login</span>
         </button>
       </form>
     </div>
+
+    <Notification
+      :show="notification.show"
+      :type="notification.type"
+      :message="notification.message"
+      @close="notification.show = false"
+    />
   </div>
 </template>
 
@@ -176,13 +240,21 @@ export default {
   color: #cbd5e0;
 }
 
-.error-message {
-  padding: 0.875rem 1rem;
-  background-color: #fed7d7;
-  color: #c53030;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  border-left: 4px solid #c53030;
+.input-error {
+  border-color: #fc8181;
+  background-color: #fff5f5;
+}
+
+.input-error:focus {
+  border-color: #f56565;
+  box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.1);
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
 }
 
 .btn-login {
