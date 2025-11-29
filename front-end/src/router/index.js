@@ -6,6 +6,7 @@ import DashboardView from '../views/DashboardView.vue'
 import MenuListView from '../views/MenuListView.vue'
 import MenuFormView from '../views/MenuFormView.vue'
 import OrderListView from '../views/OrderListView.vue'
+import OrderFormView from '../views/OrderFormView.vue'
 
 const routes = [
   {
@@ -48,6 +49,12 @@ const routes = [
     name: 'OrderList',
     component: OrderListView,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/orders/create',
+    name: 'OrderCreate',
+    component: OrderFormView,
+    meta: { requiresAuth: true}
   }
 ]
 
