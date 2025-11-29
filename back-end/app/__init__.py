@@ -13,9 +13,11 @@ def create_app():
     # Import routes
     from app.routes.menu import bp as menu_bp
     from app.routes.auth import bp as auth_bp
+    from app.routes.order import bp as order_bp
     
     app.register_blueprint(menu_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(order_bp)
 
     @app.route("/")
     def home():
