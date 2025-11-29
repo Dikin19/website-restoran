@@ -1,8 +1,8 @@
 import apiClient from './api'
 
 export default {
-  getAllOrders() {
-    return apiClient.get('/orders')
+  getAllOrders(params = {}) {
+    return apiClient.get('/orders', { params })
   },
 
   getOrderById(id) {

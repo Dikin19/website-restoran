@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import MenuListView from '../views/MenuListView.vue'
 import MenuFormView from '../views/MenuFormView.vue'
+import OrderListView from '../views/OrderListView.vue'
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
     component: MenuFormView,
     meta: { requiresAuth: true }
   },
+  {
+    path: '/orders',
+    name: 'OrderList',
+    component: OrderListView,
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = createRouter({
