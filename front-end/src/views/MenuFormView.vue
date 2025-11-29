@@ -242,7 +242,6 @@ export default {
     <Navbar />
 
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Header -->
       <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">
           {{ isEditMode ? "Edit Menu" : "Tambah Menu Baru" }}
@@ -259,7 +258,6 @@ export default {
       <Loading v-if="loading" message="Memuat data..." />
 
       <form v-else @submit.prevent="handleSubmit" class="card">
-        <!-- Preview Gambar -->
         <div v-if="imagePreview" class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Preview Gambar
@@ -291,7 +289,7 @@ export default {
             type="file"
             accept="image/*"
             @change="handleFileChange"
-            class="input"
+            class="input border border-black rounded-lg"
           />
           <p class="text-xs text-gray-500 mt-1">
             Format: JPG, PNG, GIF. Maksimal 5MB
@@ -305,8 +303,8 @@ export default {
           <input
             v-model="form.nama"
             type="text"
-            class="input"
-            placeholder="Contoh: Nasi Goreng Spesial"
+            class="input border border-black rounded-lg"
+            placeholder="Contoh: Nasi Goreng"
             required
           />
         </div>
@@ -318,13 +316,12 @@ export default {
           <textarea
             v-model="form.deskripsi"
             rows="3"
-            class="input"
+            class="input border border-black rounded-lg"
             placeholder="Deskripsi menu..."
           ></textarea>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-4">
-          <!-- Harga -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Harga <span class="text-red-500">*</span>
@@ -337,6 +334,7 @@ export default {
               class="input"
               placeholder="25000"
               required
+              
             />
           </div>
 
@@ -344,7 +342,7 @@ export default {
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Kategori <span class="text-red-500">*</span>
             </label>
-            <select v-model="form.kategori" class="input" required>
+            <select v-model="form.kategori" class="input border border-black rounded-lg" required>
               <option value="">Pilih Kategori</option>
               <option value="Makanan">Makanan</option>
               <option value="Minuman">Minuman</option>
@@ -357,7 +355,7 @@ export default {
         <div class="flex space-x-3 pt-4 border-t">
           <button
             type="submit"
-            class="btn btn-primary flex-1"
+            class="btn btn-primary flex-1 border border-black rounded-lg"
             :disabled="submitting"
           >
             <span v-if="submitting">Menyimpan...</span>
@@ -365,7 +363,7 @@ export default {
               >💾 {{ isEditMode ? "Update Menu" : "Simpan Menu" }}</span
             >
           </button>
-          <router-link to="/menu" class="btn btn-secondary flex-1 text-center">
+          <router-link to="/menu" class="btn btn-secondary flex-1 text-center border border-black rounded-lg">
             ✕ Batal
           </router-link>
         </div>

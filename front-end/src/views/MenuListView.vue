@@ -110,6 +110,23 @@ export default {
       }).format(amount);
     },
 
+    getMenuImage(menu) {
+      if (menu.gambar) {
+        return `http://localhost:5000/uploads/${menu.gambar}`;
+      }
+      
+      const prompt = `${menu.nama} food dish, professional food photography, delicious`;
+      return `https://image.pollinations.ai/prompt/${encodeURIComponent(
+        prompt
+      )}?width=400&height=300&nologo=true`;
+    },
+
+    getPlaceholderImage(menu) {
+      
+      const text = encodeURIComponent(menu.nama);
+      return `https://placehold.co/400x300/e5e7eb/6b7280?text=${text}`;
+    },
+
     showNotification(type, message) {
       this.notification = { show: true, type, message };
     },
@@ -135,19 +152,18 @@ export default {
 
       <div class="card mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Search -->
           <input
             v-model="filters.search"
             @input="onFilterChange"
             type="text"
             placeholder="Cari nama menu..."
-            class="input"
+            class="input border border-black rounded-lg"
           />
 
           <select
             v-model="filters.kategori"
             @change="onFilterChange"
-            class="input"
+            class="input border border-black rounded-lg"
           >
             <option value="">Semua Kategori</option>
             <option value="Makanan">Makanan</option>
@@ -159,7 +175,7 @@ export default {
           <select
             v-model="filters.limit"
             @change="onFilterChange"
-            class="input"
+            class="input border border-black rounded-lg"
           >
             <option :value="10">10 per halaman</option>
             <option :value="25">25 per halaman</option>
@@ -183,17 +199,11 @@ export default {
             class="relative h-48 bg-gray-200 rounded-lg overflow-hidden mb-4"
           >
             <img
-              v-if="menu.gambar"
-              :src="`http://localhost:5000/uploads/${menu.gambar}`"
+              :src="getMenuImage(menu)"
               :alt="menu.nama"
               class="w-full h-full object-cover"
+              @error="$event.target.src = getPlaceholderImage(menu)"
             />
-            <div
-              v-else
-              class="flex items-center justify-center h-full text-6xl"
-            >
-              🍽️
-            </div>
 
             <div class="absolute top-2 right-2">
               <span
@@ -242,7 +252,7 @@ export default {
         <p class="text-gray-600 mb-4">
           Mulai tambahkan menu untuk restoran Anda
         </p>
-        <router-link to="/menu/create" class="btn btn-primary">
+        <router-link to="/menu/create" class="btn btn-primary border border-black rounded-lg">
           ➕ Tambah Menu Pertama
         </router-link>
       </div>
