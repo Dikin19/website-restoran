@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import MenuListView from '../views/MenuListView.vue'
+import MenuFormView from '../views/MenuFormView.vue'
 
 const routes = [
   {
@@ -26,6 +27,19 @@ const routes = [
     path: '/menu',
     name: 'MenuList',
     component: MenuListView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/menu/tambah',
+    name: 'MenuAdd',
+    component: MenuFormView,
+    meta: { requiresAuth: true },
+    alias: '/menu/create'
+  },
+  {
+    path: '/menu/edit/:id',
+    name: 'MenuEdit',
+    component: MenuFormView,
     meta: { requiresAuth: true }
   },
 ]

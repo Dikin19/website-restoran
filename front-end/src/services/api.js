@@ -14,8 +14,20 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   config => {
+    // Tambahkan token jika ada
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
+    
+    // Jika data adalah FormData, hapus Content-Type agar browser set otomatis dengan boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
+    }
     
     console.log(`${config.method.toUpperCase()} ${config.url}`)
+    console.log('Request headers:', config.headers)
+    console.log('Request data type:', config.data?.constructor?.name)
     return config
   },
   error => {

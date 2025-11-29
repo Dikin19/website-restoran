@@ -23,30 +23,20 @@ export default {
    * @returns {Promise} Response dari server
    * Endpoint: POST /api/menu
    * 
-   * Penjelasan:
-   * - Pakai FormData karena ada upload file
-   * - Header Content-Type otomatis jadi multipart/form-data
+   * Note: Axios otomatis set Content-Type untuk FormData
    */
   createMenu(formData) {
-    return apiClient.post('/menu', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    return apiClient.post('/menu', formData)
   },
 
   /**
    * @param {Number} id - ID menu yang akan diupdate
    * @param {FormData} formData - Data baru
    * @returns {Promise} Response dari server
-   * Endpoint: PUT /api/menu/{id}
+   * Endpoint: POST /api/menu/update/{id}
    */
   updateMenu(id, formData) {
-    return apiClient.put(`/menu/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    return apiClient.post(`/menu/update/${id}`, formData)
   },
 
   /**
