@@ -1,9 +1,179 @@
+<script>
+import Navbar from "@/components/Navbar.vue";
+import Loading from "@/components/Loading.vue";
+import Notification from "@/components/Notification.vue";
+import menuService from "@/services/menuService";
+import orderService from "@/services/orderService";
+
+export default {
+  name: "OrderFormView",
+
+  components: {
+    Navbar,
+    Loading,
+    Notification,
+  },
+
+  data() {
+    return {
+      form: {
+        nama_customer: "",
+        catatan: "",
+      },
+      selectedItems: [],
+      showMenuModal: false,
+      loadingMenus: false,
+      availableMenus: [],
+      menuFilter: "",
+      submitting: false,
+      notification: {
+        show: false,
+        type: "info",
+        message: "",
+      },
+    };
+  },
+
+  computed: {
+    totalHarga() {
+      return this.selectedItems.reduce((total, item) => {
+        return total + item.harga * item.jumlah;
+      }, 0);
+    },
+  },
+
+  methods: {
+    async loadMenus() {
+      this.loadingMenus = true;
+
+      try {
+        const params = { limit: 100 };
+        if (this.menuFilter) params.kategori = this.menuFilter;
+
+        const response = await menuService.getAllMenus(params);
+
+        if (response.data.success) {
+          // Filter hanya menu yang tersedia
+          this.availableMenus = response.data.data.filter(
+            (menu) => menu.tersedia
+          );
+        }
+      } catch (error) {
+        this.showNotification("error", "Gagal memuat menu");
+      } finally {
+        this.loadingMenus = false;
+      }
+    },
+
+    addMenuItem(menu) {
+      const existingIndex = this.selectedItems.findIndex(
+        (item) => item.id === menu.id
+      );
+
+      if (existingIndex !== -1) {
+        this.selectedItems[existingIndex].jumlah++;
+      } else {
+        // Jika belum ada, tambah item baru
+        this.selectedItems.push({
+          id: menu.id,
+          nama: menu.nama,
+          harga: menu.harga,
+          jumlah: 1,
+        });
+      }
+
+      this.showNotification("success", `${menu.nama} ditambahkan`);
+    },
+
+    increaseQuantity(index) {
+      this.selectedItems[index].jumlah++;
+    },
+
+    decreaseQuantity(index) {
+      if (this.selectedItems[index].jumlah > 1) {
+        this.selectedItems[index].jumlah--;
+      }
+    },
+
+    removeItem(index) {
+      this.selectedItems.splice(index, 1);
+    },
+
+    closeMenuModal() {
+      this.showMenuModal = false;
+    },
+
+    async handleSubmit() {
+      if (!this.form.nama_customer) {
+        this.showNotification("error", "Nama customer wajib diisi");
+        return;
+      }
+
+      if (this.selectedItems.length === 0) {
+        this.showNotification("error", "Pilih minimal 1 menu");
+        return;
+      }
+
+      this.submitting = true;
+
+      try {
+        // Format data untuk API
+        const orderData = {
+          nama_customer: this.form.nama_customer,
+          catatan: this.form.catatan,
+          items: this.selectedItems.map((item) => ({
+            menu_id: item.id,
+            jumlah: item.jumlah,
+          })),
+        };
+
+        const response = await orderService.createOrder(orderData);
+
+        if (response.data.success) {
+          this.showNotification("success", "Pesanan berhasil dibuat");
+
+          // Redirect ke order list setelah 1 detik
+          setTimeout(() => {
+            this.$router.push({ name: "OrderList" });
+          }, 1000);
+        }
+      } catch (error) {
+        let errorMessage = "Terjadi kesalahan";
+
+        if (error.response && error.response.data) {
+          errorMessage = error.response.data.message;
+        }
+
+        this.showNotification("error", errorMessage);
+      } finally {
+        this.submitting = false;
+      }
+    },
+
+    formatCurrency(amount) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    },
+
+    showNotification(type, message) {
+      this.notification = { show: true, type, message };
+    },
+  },
+
+  watch: {
+    showMenuModal(newVal) {
+      if (newVal) {
+        this.loadMenus();
+      }
+    },
+  },
+};
+</script>
+
 <template>
-  <!-- ============================================
-       ORDER FORM VIEW
-       ============================================
-       Halaman form untuk buat pesanan baru
-  -->
   <div>
     <Navbar />
 
@@ -253,184 +423,6 @@
     />
   </div>
 </template>
-
-<script>
-import Navbar from "@/components/Navbar.vue";
-import Loading from "@/components/Loading.vue";
-import Notification from "@/components/Notification.vue";
-import menuService from "@/services/menuService";
-import orderService from "@/services/orderService";
-
-export default {
-  name: "OrderFormView",
-
-  components: {
-    Navbar,
-    Loading,
-    Notification,
-  },
-
-  data() {
-    return {
-      form: {
-        nama_customer: "",
-        catatan: "",
-      },
-      selectedItems: [],
-      showMenuModal: false,
-      loadingMenus: false,
-      availableMenus: [],
-      menuFilter: "",
-      submitting: false,
-      notification: {
-        show: false,
-        type: "info",
-        message: "",
-      },
-    };
-  },
-
-  computed: {
-    totalHarga() {
-      return this.selectedItems.reduce((total, item) => {
-        return total + item.harga * item.jumlah;
-      }, 0);
-    },
-  },
-
-  methods: {
-    async loadMenus() {
-      this.loadingMenus = true;
-
-      try {
-        const params = { limit: 100 };
-        if (this.menuFilter) params.kategori = this.menuFilter;
-
-        const response = await menuService.getAllMenus(params);
-
-        if (response.data.success) {
-          // Filter hanya menu yang tersedia
-          this.availableMenus = response.data.data.filter(
-            (menu) => menu.tersedia
-          );
-        }
-      } catch (error) {
-        this.showNotification("error", "Gagal memuat menu");
-      } finally {
-        this.loadingMenus = false;
-      }
-    },
-
-    addMenuItem(menu) {
-      // Cek apakah sudah ada di selected items
-      const existingIndex = this.selectedItems.findIndex(
-        (item) => item.id === menu.id
-      );
-
-      if (existingIndex !== -1) {
-        // Jika sudah ada, tambah quantity
-        this.selectedItems[existingIndex].jumlah++;
-      } else {
-        // Jika belum ada, tambah item baru
-        this.selectedItems.push({
-          id: menu.id,
-          nama: menu.nama,
-          harga: menu.harga,
-          jumlah: 1,
-        });
-      }
-
-      this.showNotification("success", `${menu.nama} ditambahkan`);
-    },
-
-    increaseQuantity(index) {
-      this.selectedItems[index].jumlah++;
-    },
-
-    decreaseQuantity(index) {
-      if (this.selectedItems[index].jumlah > 1) {
-        this.selectedItems[index].jumlah--;
-      }
-    },
-
-    removeItem(index) {
-      this.selectedItems.splice(index, 1);
-    },
-
-    closeMenuModal() {
-      this.showMenuModal = false;
-    },
-
-    async handleSubmit() {
-      // Validasi
-      if (!this.form.nama_customer) {
-        this.showNotification("error", "Nama customer wajib diisi");
-        return;
-      }
-
-      if (this.selectedItems.length === 0) {
-        this.showNotification("error", "Pilih minimal 1 menu");
-        return;
-      }
-
-      this.submitting = true;
-
-      try {
-        // Format data untuk API
-        const orderData = {
-          nama_customer: this.form.nama_customer,
-          catatan: this.form.catatan,
-          items: this.selectedItems.map((item) => ({
-            menu_id: item.id,
-            jumlah: item.jumlah,
-          })),
-        };
-
-        const response = await orderService.createOrder(orderData);
-
-        if (response.data.success) {
-          this.showNotification("success", "Pesanan berhasil dibuat");
-
-          // Redirect ke order list setelah 1 detik
-          setTimeout(() => {
-            this.$router.push({ name: "OrderList" });
-          }, 1000);
-        }
-      } catch (error) {
-        let errorMessage = "Terjadi kesalahan";
-
-        if (error.response && error.response.data) {
-          errorMessage = error.response.data.message;
-        }
-
-        this.showNotification("error", errorMessage);
-      } finally {
-        this.submitting = false;
-      }
-    },
-
-    formatCurrency(amount) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      }).format(amount);
-    },
-
-    showNotification(type, message) {
-      this.notification = { show: true, type, message };
-    },
-  },
-
-  watch: {
-    showMenuModal(newVal) {
-      if (newVal) {
-        this.loadMenus();
-      }
-    },
-  },
-};
-</script>
 
 <style scoped>
 .line-clamp-2 {
