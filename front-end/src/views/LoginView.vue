@@ -51,13 +51,13 @@ export default {
       <!-- Header -->
       <div class="login-header">
         <div class="icon">🍽️</div>
-        <h1 class="title">Restoran Admin</h1>
+        <h1 class="title">Restoran</h1>
         <p class="subtitle">Login untuk mengelola restoran</p>
       </div>
 
-      <!-- Form -->
+      
       <form @submit.prevent="handleLogin" class="login-form">
-        <!-- Username -->
+      
         <div class="form-group">
           <label class="form-label">Username</label>
           <input
@@ -69,7 +69,7 @@ export default {
           />
         </div>
 
-        <!-- Password -->
+      
         <div class="form-group">
           <label class="form-label">Password</label>
           <input
@@ -81,12 +81,12 @@ export default {
           />
         </div>
 
-        <!-- Error Message -->
+       
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
 
-        <!-- Submit Button -->
+       
         <button type="submit" class="btn-login" :disabled="loading">
           <span v-if="loading">Loading...</span>
           <span v-else>Login</span>

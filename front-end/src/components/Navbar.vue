@@ -32,7 +32,7 @@ export default {
         <div class="flex items-center space-x-3">
           <span class="text-3xl">🍽️</span>
           <span class="text-xl font-bold text-gray-900 hidden sm:inline"
-            >Restoran Admin</span
+            >Restoran</span
           >
         </div>
 

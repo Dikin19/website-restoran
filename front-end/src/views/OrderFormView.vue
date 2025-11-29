@@ -184,7 +184,7 @@ export default {
         <p class="text-gray-600 mt-1">Pilih menu dan isi informasi customer</p>
       </div>
 
-      <!-- Form -->
+   
       <form @submit.prevent="handleSubmit">
         <!-- Customer Info Card -->
         <div class="card mb-6">
@@ -192,35 +192,33 @@ export default {
             Informasi Customer
           </h2>
 
-          <!-- Nama Customer -->
+         
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2 ">
               Nama Customer <span class="text-red-500">*</span>
             </label>
             <input
               v-model="form.nama_customer"
               type="text"
-              class="input"
+              class="input border border-black rounded-lg p-1"
               placeholder="Contoh: Budi Santoso"
               required
             />
           </div>
 
-          <!-- Catatan -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2 ">
               Catatan (Opsional)
             </label>
             <textarea
               v-model="form.catatan"
               rows="2"
-              class="input"
+              class="input border border-black rounded-lg p-1"
               placeholder="Contoh: Tidak pakai cabe"
             ></textarea>
           </div>
         </div>
 
-        <!-- Menu Selection Card -->
         <div class="card mb-6">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-900">Pilih Menu</h2>
@@ -233,7 +231,7 @@ export default {
             </button>
           </div>
 
-          <!-- Selected Items -->
+         
           <div v-if="selectedItems.length > 0" class="space-y-3">
             <div
               v-for="(item, index) in selectedItems"
@@ -268,7 +266,6 @@ export default {
                 </button>
               </div>
 
-              <!-- Subtotal & Remove -->
               <div class="text-right">
                 <p class="font-bold text-primary-600">
                   {{ formatCurrency(item.harga * item.jumlah) }}
@@ -283,7 +280,7 @@ export default {
               </div>
             </div>
 
-            <!-- Total -->
+    
             <div class="pt-4 border-t flex justify-between items-center">
               <span class="text-lg font-semibold text-gray-900"
                 >Total Pembayaran:</span
@@ -294,18 +291,17 @@ export default {
             </div>
           </div>
 
-          <!-- Empty State -->
+         
           <div v-else class="text-center py-8 text-gray-500">
             <p>Belum ada menu dipilih</p>
             <p class="text-sm">Klik "Tambah Item" untuk memilih menu</p>
           </div>
         </div>
 
-        <!-- Submit Buttons -->
         <div class="flex space-x-3">
           <button
             type="submit"
-            class="btn btn-success flex-1"
+            class="btn btn-success flex-1 border border-black rounded-lg p-1"
             :disabled="submitting || selectedItems.length === 0"
           >
             <span v-if="submitting">Memproses...</span>
@@ -313,7 +309,7 @@ export default {
           </button>
           <router-link
             to="/orders"
-            class="btn btn-secondary flex-1 text-center"
+            class="btn btn-secondary flex-1 text-center border border-black rounded-lg p-1"
           >
             ✕ Batal
           </router-link>
@@ -321,7 +317,7 @@ export default {
       </form>
     </div>
 
-    <!-- Menu Selection Modal -->
+   
     <div
       v-if="showMenuModal"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
@@ -354,7 +350,7 @@ export default {
           </button>
         </div>
 
-        <!-- Filter -->
+       
         <div class="p-4 border-b">
           <select v-model="menuFilter" @change="loadMenus" class="input">
             <option value="">Semua Kategori</option>
@@ -365,7 +361,7 @@ export default {
           </select>
         </div>
 
-        <!-- Modal Body -->
+        
         <div class="flex-1 overflow-y-auto p-6">
           <Loading v-if="loadingMenus" message="Memuat menu..." />
 
