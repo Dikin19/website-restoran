@@ -193,7 +193,7 @@ Ikuti prompt untuk input:
 python start.py
 ```
 
-Server akan berjalan di: **http://localhost:5000**
+Server akan berjalan di: **http://127.0.0.1:5000**
 
 **Endpoint API:**
 
@@ -276,13 +276,14 @@ Dari dashboard:
 
 Dari dashboard:
 
-- Klik **Order List** untuk melihat semua pesanan
+- Klik **Pesanan** untuk melihat semua pesanan
 - Klik **New Order** untuk membuat pesanan baru
 - Pilih menu dan tentukan jumlahnya
 - Isi nama customer dan catatan (opsional)
 - Total harga akan dihitung otomatis
-- Klik **View Details** untuk melihat detail pesanan
+- Klik **View Details** untuk melihat detail pesanan di order list
 - Update status dari "Pending" ke "Selesai"
+- Delete order pending/selesai di order list
 
 ---
 
