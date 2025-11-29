@@ -19,42 +19,22 @@ def get_order_by_id(order_id):
 
 @bp.route('', methods=['POST'])
 def create_order():
-    """
-    Endpoint: POST /api/orders
     
-    Request Body (JSON):
-    {
-        "nama_customer": "Budi Santoso",
-        "catatan": "Pedas sedang",
-        "items": [
-            {
-                "menu_id": 1,
-                "jumlah": 2
-            },
-            {
-                "menu_id": 5,
-                "jumlah": 1
-            }
-        ]
-    }
-    
-    Response (201):
-    {
-        "success": true,
-        "message": "Pesanan berhasil dibuat",
-        "data": {
-            "id": 1,
-            "nama_customer": "Budi Santoso",
-            "total_harga": 60000,
-            "status": "pending",
-            "items": [...]
-        }
-    }
-    
-    Penjelasan:
-    - Endpoint ini membuat pesanan baru dengan items-nya
-    - Harga dihitung otomatis dari menu yang dipilih
-    - Total harga otomatis dijumlahkan
-    """
     data = request.get_json()
     return OrderController.create_order(data)
+
+@bp.route('/<int:order_id>/status', methods=['PATCH'])
+def update_status(order_id):
+    
+    data = request.get_json()
+    return OrderController.update_status(order_id, data)
+
+@bp.route('/<int:order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    
+    return OrderController.delete_order(order_id)
+
+@bp.route('/statistics', methods=['GET'])
+def get_statistics():
+    
+    return OrderController.get_statistics()

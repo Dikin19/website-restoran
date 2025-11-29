@@ -118,4 +118,97 @@ class OrderController:
                 'data': None
             }), 500
 
-    
+    @staticmethod
+    def update_status(order_id, data):
+      
+        try:
+           
+            order = Order.get_by_id(order_id)
+            if not order:
+                return jsonify({
+                    'success': False,
+                    'message': 'Pesanan tidak ditemukan',
+                    'data': None
+                }), 404
+            
+           
+            if 'status' not in data:
+                return jsonify({
+                    'success': False,
+                    'message': 'Field status wajib diisi',
+                    'data': None
+                }), 400
+            
+            new_status = data['status']
+            if new_status not in ['pending', 'selesai']:
+                return jsonify({
+                    'success': False,
+                    'message': 'Status harus "pending" atau "selesai"',
+                    'data': None
+                }), 400
+            
+          
+            Order.update_status(order_id, new_status)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Status pesanan diubah menjadi {new_status}',
+                'data': {
+                    'id': order_id,
+                    'status': new_status
+                }
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
+
+    @staticmethod
+    def delete_order(order_id):
+        try:
+            
+            order = Order.get_by_id(order_id)
+            if not order:
+                return jsonify({
+                    'success': False,
+                    'message': 'Pesanan tidak ditemukan',
+                    'data': None
+                }), 404
+            
+           
+            Order.delete(order_id)
+            
+            return jsonify({
+                'success': True,
+                'message': 'Pesanan berhasil dihapus',
+                'data': None
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
+
+    @staticmethod
+    def get_statistics():
+        
+        try:
+            stats = Order.get_statistics()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Statistik berhasil diambil',
+                'data': stats
+            }), 200
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}',
+                'data': None
+            }), 500
